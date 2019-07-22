@@ -3,7 +3,7 @@ package com.wh.baseproject
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.wh.library.base.BaseVMActivity
+import com.wh.library.base.activity.BaseVMActivity
 
 class MainActivity : BaseVMActivity<MainViewModel>() {
 
@@ -12,6 +12,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun initData() {
+
         mViewModel?.checkVersion(this@MainActivity, Observer{
             Log.d("dfasfasfdasf","122222222222222\n${it.toString()}")
         })

@@ -1,6 +1,7 @@
-package com.wh.library.base
+package com.wh.library.base.activity
 
 import android.os.Bundle
+import com.wh.library.base.BaseViewModel
 
 /**
  * @author PC-WangHao on 2019/07/19 16:39.

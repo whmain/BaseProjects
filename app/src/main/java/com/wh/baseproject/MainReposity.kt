@@ -1,7 +1,9 @@
 package com.wh.baseproject
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.readystatesoftware.chuck.ChuckInterceptor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +24,10 @@ import io.reactivex.Observer as Observer1
  */
 class MainReposity private constructor() {
     companion object {
+       lateinit var mContext:Application
         val Instance = MainReposity()
+
+
     }
 
     var mRetrofit: Retrofit
@@ -30,6 +35,7 @@ class MainReposity private constructor() {
     init {
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(ChuckInterceptor(AppUtils.getApp()))
             .dns { hostname ->
                 val list = Dns.SYSTEM.lookup(hostname)
                 val newlist = ArrayList<InetAddress>()
@@ -48,6 +54,8 @@ class MainReposity private constructor() {
             .baseUrl("http://papi.js-cyyl.com:8081")
             .build()
     }
+
+
 
     fun checkUpdate(liveData: MutableLiveData<VersionRoot>) {
         mRetrofit.create(ApiService::class.java)

@@ -9,7 +9,7 @@ import android.content.Context
  * E-Mail: wh_main@163.com
  * Description:
  */
-class BaseApp : Application() {
+open class BaseApp : Application() {
 
     /**
     * 是否是主进程

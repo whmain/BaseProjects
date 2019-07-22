@@ -1,4 +1,4 @@
-package com.wh.library.base
+package com.wh.library.base.activity
 
 import android.os.Bundle
 
