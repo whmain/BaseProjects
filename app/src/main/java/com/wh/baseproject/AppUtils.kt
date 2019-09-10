@@ -1,6 +1,5 @@
 package com.wh.baseproject
 
-import android.util.Log
 import com.wh.library.base.BaseApp
 
 /**
@@ -13,7 +12,6 @@ object AppUtils {
 
     fun init(application: BaseApp) {
         mApplication = application
-        Log.d("dfasfasaf",application.toString())
     }
 
     fun getApp(): BaseApp? {

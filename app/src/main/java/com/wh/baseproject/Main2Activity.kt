@@ -1,12 +1,13 @@
 package com.wh.baseproject
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
+import com.wh.baseproject.base.BaseAppActivity
 import com.wh.baseproject.vp.VPAdapter
-import com.wh.library.base.activity.BaseNormalActivity
 import kotlinx.android.synthetic.main.activity_main2.*
 
-class Main2Activity : BaseNormalActivity() {
+class Main2Activity : BaseAppActivity() {
 
 
     override fun getLayoutId(): Int = R.layout.activity_main2
@@ -14,7 +15,9 @@ class Main2Activity : BaseNormalActivity() {
     override fun initData() {
         Log.d("dfasfasfdasf","122222222222222\n")
         te.setOnClickListener {
-            startActivity(MainActivity::class.java)
+//            startActivity(MainActivity::class.java)
+            var intent = Intent(this@Main2Activity,MainActivity::class.java)
+            startActivity(intent)
         }
         vpContainer.offscreenPageLimit = 1
         vpContainer.adapter = VPAdapter(supportFragmentManager)
@@ -32,6 +35,7 @@ class Main2Activity : BaseNormalActivity() {
             R.id.btn3 -> vpContainer.currentItem = 2
             R.id.btn4 -> vpContainer.currentItem = 3
         }
+        startActivity(Intent(this@Main2Activity,Main3Activity::class.java));
     }
 
 }

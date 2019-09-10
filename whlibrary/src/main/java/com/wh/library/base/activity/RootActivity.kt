@@ -1,7 +1,6 @@
 package com.wh.library.base.activity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import android.view.MotionEvent
@@ -30,10 +29,7 @@ abstract class RootActivity: AppCompatActivity() {
 
     }
 
-    fun <T> startActivity(clazz: Class<T>){
-        startActivity(Intent(this@RootActivity,clazz))
 
-    }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {

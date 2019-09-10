@@ -7,10 +7,11 @@ import com.wh.library.base.BaseApp
  * E-Mail: wh_main@163.com
  * Description:
  */
-class MyApp :BaseApp(){
+ class MyApp :BaseApp(){
     override fun onCreate() {
         super.onCreate()
 
         AppUtils.init(this)
     }
+
 }
