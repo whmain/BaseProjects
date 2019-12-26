@@ -14,11 +14,11 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun initData() {
-
         mViewModel?.checkVersion(this@MainActivity, Observer{
             Log.d("dfasfasfdasf","122222222222222\n${it.toString()}")
         })
         Test.activity = this
+
     }
 
 

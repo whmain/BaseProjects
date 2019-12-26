@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import android.view.View
 import com.wh.baseproject.base.BaseAppActivity
+import com.wh.baseproject.test.Test1
 import com.wh.baseproject.vp.VPAdapter
 import kotlinx.android.synthetic.main.activity_main2.*
 
@@ -25,6 +26,7 @@ class Main2Activity : BaseAppActivity() {
         btn2.setOnClickListener(mOnClickListener)
         btn3.setOnClickListener(mOnClickListener)
         btn4.setOnClickListener(mOnClickListener)
+        Test1().printTest2()
     }
 
 

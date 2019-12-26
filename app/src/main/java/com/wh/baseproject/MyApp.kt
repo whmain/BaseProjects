@@ -1,5 +1,6 @@
 package com.wh.baseproject
 
+import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.wh.library.base.BaseApp
 
 /**
@@ -12,6 +13,8 @@ import com.wh.library.base.BaseApp
         super.onCreate()
 
         AppUtils.init(this)
+
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
 }

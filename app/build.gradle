@@ -4,13 +4,15 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.wh.baseproject"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,6 +23,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding{
+        enabled = true
+    }
+}
+
+kapt {  // kapt 配置
+    generateStubs = true
 }
 
 dependencies {
@@ -43,4 +52,8 @@ dependencies {
     //非必要依赖， log依赖，如果需要打印OkHttpLog需要添加
     debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
     releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+
+    kapt 'com.android.databinding:compiler:3.1.4'  // DataBinding 注解处理依赖
+
+    implementation 'cn.yipianfengye.android:zxing-library:2.2'
 }
