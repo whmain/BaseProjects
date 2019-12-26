@@ -21,7 +21,8 @@ public class LoginProcessor {
             Class clazz = loader.loadClass(className);
             return needLogin(context,clazz);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Class Not Found Exception");
+            return false;
+//            throw new RuntimeException("Class Not Found Exception");
         }
     }
 

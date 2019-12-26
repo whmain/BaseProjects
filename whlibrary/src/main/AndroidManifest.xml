@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.wh.library">
-
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <!--<application>-->
         <!--<provider-->
                 <!--android:name="leakcanary.internal.LeakSentryInstaller"-->
