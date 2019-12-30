@@ -7,14 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.1"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.wh.baseproject"
-        minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.releaseVersionCode
+        versionName rootProject.releaseVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -25,6 +25,14 @@ android {
     }
     dataBinding{
         enabled = true
+    }
+
+
+
+    // Keep the following configuration in order to target Java 8.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -43,17 +51,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':whlibrary')
 
-    implementation "io.reactivex.rxjava2:rxjava:2.1.0" // 必要rxjava2依赖
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.1" // 必要rxandrroid依赖，切线程时需要用到
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0' // 必要retrofit依赖
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0' // 必要依赖，和Rxjava结合必须用到，下面会提到
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0' // 必要依赖，解析json字符所用
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    //非必要依赖， log依赖，如果需要打印OkHttpLog需要添加
-    debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
-    releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+//    implementation "io.reactivex.rxjava2:rxjava:2.2.6" // 必要rxjava2依赖
+//    implementation "io.reactivex.rxjava2:rxandroid:2.1.1" // 必要rxandrroid依赖，切线程时需要用到
+//    implementation 'com.squareup.retrofit2:retrofit:2.4.0' // 必要retrofit依赖
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0' // 必要依赖，和Rxjava结合必须用到，下面会提到
+//    implementation 'com.squareup.retrofit2:converter-gson:2.4.0' // 必要依赖，解析json字符所用
+//    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+//    //非必要依赖， log依赖，如果需要打印OkHttpLog需要添加
+//    debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
+//    releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
 
     kapt 'com.android.databinding:compiler:3.1.4'  // DataBinding 注解处理依赖
 
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
+
+
+
+
+
 }
+
+
+

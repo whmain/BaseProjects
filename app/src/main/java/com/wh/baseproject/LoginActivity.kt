@@ -11,5 +11,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_login)
         DataBindingUtil.setContentView<ActivityLoginBinding>(this,R.layout.activity_login);
+
     }
 }

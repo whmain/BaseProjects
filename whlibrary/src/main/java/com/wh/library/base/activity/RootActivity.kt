@@ -7,8 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
-
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 
 
 /**
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
  * E-Mail: wh_main@163.com
  * Description:请不要直接使用 子类继承[BaseVMActivity] [BaseNormalActivity]
  */
-abstract class RootActivity: AppCompatActivity() {
+abstract class RootActivity: RxAppCompatActivity() {
 
     abstract fun getLayoutId():Int
 

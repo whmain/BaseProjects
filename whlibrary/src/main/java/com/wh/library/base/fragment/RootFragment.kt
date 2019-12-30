@@ -5,14 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.trello.rxlifecycle2.components.support.RxFragment
 
 /**
  * @author PC-WangHao on 2019/07/22 14:45.
  * E-Mail: wh_main@163.com
  * Description:
  */
-open class RootFragment : Fragment() {
+open class RootFragment : RxFragment() {
 
     protected val TAG:String by lazy {
         javaClass.simpleName

@@ -6,7 +6,6 @@ import android.view.View
 import com.wh.baseproject.base.BaseAppActivity
 import com.wh.baseproject.test.Test1
 import com.wh.baseproject.vp.VPAdapter
-import com.wh.library.utils.WhiteListUtil
 import kotlinx.android.synthetic.main.activity_main2.*
 
 class Main2Activity : BaseAppActivity() {
@@ -17,9 +16,7 @@ class Main2Activity : BaseAppActivity() {
     override fun initData() {
         Log.d("dfasfasfdasf","122222222222222\n")
         te.setOnClickListener {
-//            startActivity(MainActivity::class.java)
-            var intent = Intent(this@Main2Activity,MainActivity::class.java)
-            startActivity(intent)
+
         }
         vpContainer.offscreenPageLimit = 1
         vpContainer.adapter = VPAdapter(supportFragmentManager)
@@ -28,7 +25,7 @@ class Main2Activity : BaseAppActivity() {
         btn3.setOnClickListener(mOnClickListener)
         btn4.setOnClickListener(mOnClickListener)
         Test1().printTest2()
-        WhiteListUtil.setWhiteList(this)
+//        WhiteListUtil.setWhiteList(this)
     }
 
 
