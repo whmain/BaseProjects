@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
             android:name=".MyApp"
             android:allowBackup="true"
@@ -12,18 +14,20 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".Main3Activity"></activity>
-        <activity android:name=".Main2Activity">
-        </activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".TestActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Main3Activity"></activity>
+        <activity android:name=".Main2Activity">
+        </activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".TestActivity">
+
         </activity>
     </application>
 

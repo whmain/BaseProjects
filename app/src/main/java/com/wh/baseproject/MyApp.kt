@@ -11,7 +11,7 @@ import com.wh.library.base.BaseApp
  */
  class MyApp :BaseApp(){
 
-    val BASE_URL = "https://www.wanandroid.com";
+    val BASE_URL = "http://api.map.baidu.com";
 
     override fun onCreate() {
         super.onCreate()

@@ -11,6 +11,9 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
+
+import static android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 
 /**
  * @author PC-WangHao on 2019/12/26 10:34.
@@ -20,8 +23,42 @@ import androidx.annotation.RequiresApi;
 public class WhiteListUtil {
 
 
+    /**
+     * 是否在白名单中
+     * @return  false：没有加入白名单
+     */
 
-    public static void setWhiteList(Activity context){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static boolean isIgnoringBatteryOptimizations(Activity context) {
+        boolean isIgnoring = false;
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            isIgnoring = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+        }
+        return isIgnoring;
+    }
+
+    /**
+     * 请求加入白名单
+     */
+    @RequiresPermission(REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void requestIgnoreBatteryOptimizations(Activity context) {
+        try {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + context.getPackageName()));
+            context.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 加入厂商系统白名单，目前支持 华为、小米、OPPO、VIVO、魅族、三星、乐视、锤子
+     * @param context
+     */
+    public static void setSystemWhiteList(Activity context){
         if (DevicesUtil.isHuawei()){
             goHuaweiSetting(context);
         }else if (DevicesUtil.isXiaomi()){
@@ -116,24 +153,4 @@ public class WhiteListUtil {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean isIgnoringBatteryOptimizations(Activity context) {
-        boolean isIgnoring = false;
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if (powerManager != null) {
-            isIgnoring = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
-        }
-        return isIgnoring;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestIgnoreBatteryOptimizations(Activity context) {
-        try {
-            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent.setData(Uri.parse("package:" + context.getPackageName()));
-            context.startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
