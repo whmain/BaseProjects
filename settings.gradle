@@ -1,1 +1,1 @@
-include ':app', ':whlibrary'
+include ':app', ':whlibrary', ':video'
