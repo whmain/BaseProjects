@@ -26,21 +26,7 @@
             android:layout_toLeftOf="@id/tingZhi_bt"
             android:text="录像"/>
 
-    <Button
-            android:id="@+id/auto_focus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/luXiang_bt"
-            android:text="调焦"/>
 
-    <Button
-            android:id="@+id/screenshot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/auto_focus"
-            android:text="拍照"/>
 
     <TextView
             android:id="@+id/time"
@@ -49,8 +35,6 @@
             android:textColor="#FF0000"
             android:text="1秒"
             android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"/>
+            android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

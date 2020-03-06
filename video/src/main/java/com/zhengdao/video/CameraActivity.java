@@ -1,20 +1,17 @@
 package com.zhengdao.video;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.Size;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -27,14 +24,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,25 +34,20 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class CameraActivity extends AppCompatActivity implements OnClickListener,
         SensorEventListener, Callback {
+    private static final String TAG = "CameraActivity";
+
     private SurfaceView surfaceView; // 用于绘制缓冲图像的
     private Button luXiang_bt; // 开始录制的按钮
     private Button tingZhi_bt; // 停止录制的按钮
-    private Button auto_focus; // 进行对焦
-    private Button screenshot; // 截图
     private TextView time_tv; // 显示时间的文本框
     private MediaRecorder mRecorder;
     private boolean recording; // 记录是否正在录像,fasle为未录像, true 为正在录像
     private File videoFolder; // 存放视频的文件夹
-    private File videFile; // 视频文件
+    private File videoFile; // 视频文件
     private Handler handler;
     private int time; // 时间
     private Camera myCamera; // 相机声明
     private SurfaceHolder holder; // 用来访问surfaceview的接口
-    private SensorManager sManager; // 传感器管理者
-    private Sensor sensor; // 传感器对象
-    private int mX, mY, mZ; // x y z 坐标
-    private Calendar calendar; // 日历
-    private long lasttimestamp = 0; // 上一次用时的标志
 
     /**
      * 录制过程中,时间变化
@@ -79,32 +65,20 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制横屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
+        getScreenSize();
         initView();
-        initSensor();
         initCreateFile();
     }
 
-    /**
-     * 对传感器进行初始化
-     */
-    private void initSensor() {
-        sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (sManager == null) {
-            // throw new IllegalArgumentException("SensorManager is null");
-        }
-        sManager.registerListener(this, sensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
-    }
+
 
     /**
      * 文件的创建
      */
-    private void initCreateFile() {
+    private void initCreateFile()   {
         // 判断sd卡是否存在
         boolean sdCardExist = Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED);
@@ -140,13 +114,9 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
         luXiang_bt = (Button) findViewById(R.id.luXiang_bt);
         tingZhi_bt = (Button) findViewById(R.id.tingZhi_bt);
         time_tv = (TextView) findViewById(R.id.time);
-        auto_focus = (Button) findViewById(R.id.auto_focus);
-        screenshot = (Button) findViewById(R.id.screenshot);
         handler = new Handler();
         holder = surfaceView.getHolder();
         tingZhi_bt.setOnClickListener(this);
-        auto_focus.setOnClickListener(this);
-        screenshot.setOnClickListener(this);
         // 添加回调
         holder.addCallback(this);
     }
@@ -183,25 +153,19 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                             new Object[] { new java.sql.Date(System
                                     .currentTimeMillis()) });
                     // 声明视频文件对象
-                    videFile = new File(videoFolder.getAbsoluteFile()
+                    videoFile = new File(videoFolder.getAbsoluteFile()
                             + File.separator + "video" + nowTime + ".mp4");
                     // 关闭预览并释放资源
                     myCamera.unlock();
                     mRecorder = new MediaRecorder();
                     mRecorder.setCamera(myCamera);
                     // 创建此视频文件
-                    videFile.createNewFile();
-                    mRecorder.setPreviewDisplay(surfaceView.getHolder()
-                            .getSurface()); // 预览
+                    videoFile.createNewFile();
+                    mRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface()); // 预览
                     mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA); // 视频源
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC); // 录音源为麦克风
                     mRecorder
                             .setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // 输出格式为mp4
-                    /**
-                     *引用android.util.DisplayMetrics 获取分辨率
-                     */
-                    // DisplayMetrics dm = new DisplayMetrics();
-                    // getWindowManager().getDefaultDisplay().getMetrics(dm);
                     mRecorder.setVideoSize(800, 480); // 视频尺寸
                     mRecorder.setVideoEncodingBitRate(2*1280*720); //设置视频编码帧率
                     mRecorder.setVideoFrameRate(30); // 视频帧频率
@@ -209,14 +173,13 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                             .setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP); // 视频编码
                     mRecorder
                             .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); // 音频编码
-                    mRecorder.setMaxDuration(1800000); // 设置最大录制时间
-                    mRecorder.setOutputFile(videFile.getAbsolutePath()); // 设置录制文件源
+                    mRecorder.setMaxDuration(0); // 设置最大录制时间 无限制
+                    mRecorder.setOutputFile(videoFile.getAbsolutePath()); // 设置录制文件源
                     mRecorder.prepare(); // 准备录像
                     mRecorder.start(); // 开始录像
                     time_tv.setVisibility(View.VISIBLE); // 设置文本框可见
                     handler.post(timeRun); // 调用Runable
                     recording = true; // 改变录制状态为正在录制
-                    setAutofocus();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (IllegalStateException e) {
@@ -237,7 +200,7 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                 recording = false;
                 Toast.makeText(
                         CameraActivity.this,
-                        videFile.getAbsolutePath() + " " + videoTimeLength
+                        videoFile.getAbsolutePath() + " " + videoTimeLength
                                 + "秒", Toast.LENGTH_LONG).show();
             }
             // 开启相机
@@ -251,62 +214,21 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                 }
             }
             myCamera.startPreview(); // 开启预览
-        }else if (viewId == R.id.auto_focus){
-            setAutofocus();
-        }else if (viewId == R.id.screenshot){
-            myCamera.autoFocus(new AutoFocusCallback() {
-
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-                    if (success) {
-                        camera.takePicture(null, null, jpegCallBack);
-                    }
-                }
-            });
         }
     }
 
-    /**
-     * 设置自动对焦
-     */
-    private void setAutofocus() {
-        if (myCamera != null) {
-            myCamera.autoFocus(new AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-                    if (success) {
-                    }
-                }
-            });
-        }
-    }
 
     /**
      * 传感器改变调用的方法
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor == null) {
-            return;
-        }
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            int x = (int) event.values[0];
-            int y = (int) event.values[1];
-            int z = (int) event.values[2];
-            calendar = Calendar.getInstance();
-            long stamp = calendar.getTimeInMillis();
-            int px = Math.abs(mX - x);
-            int py = Math.abs(mY - y);
-            int pz = Math.abs(mZ - z);
-            int maxValue = getMaxValue(px, py, pz);
-            if (maxValue > 2 && (stamp - lasttimestamp) > 30) {
-                lasttimestamp = stamp;
-                setAutofocus();
-            }
-            mX = x;
-            mY = y;
-            mZ = z;
-        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     /**
@@ -324,10 +246,7 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
         return max;
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
 
     /**
      * suraceView 创建执行的操作
@@ -346,37 +265,78 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
         }
     }
 
+    private int screenWidth;
+    private int screenHeight;
+
+    public void getScreenSize() {
+        WindowManager wm = (WindowManager) getSystemService(
+                Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        screenWidth = display.getWidth();
+        screenHeight = display.getHeight();
+    }
+
     /**
      * suraceView 状态改变执行的操作
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
-        // 开始预览
-        myCamera.startPreview();
-        Camera.Parameters parameters = myCamera.getParameters();// 获取mCamera的参数对象
-        Size largestSize = getBestSupportedSize(parameters
-                .getSupportedPreviewSizes());
-        parameters.setPreviewSize(largestSize.width, largestSize.height);// 设置预览图片尺寸
-        largestSize = getBestSupportedSize(parameters
-                .getSupportedPictureSizes());// 设置捕捉图片尺寸
-        parameters.setPictureSize(largestSize.width, largestSize.height);
-        myCamera.setParameters(parameters);
+        try {
+
+            //摄像头画面显示在Surface上
+            if (myCamera != null) {
+                Camera.Parameters parameters = myCamera.getParameters();
+                List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
+                int[] a = new int[sizes.size()];
+                int[] b = new int[sizes.size()];
+                for (int i = 0; i < sizes.size(); i++) {
+                    int supportH = sizes.get(i).height;
+                    int supportW = sizes.get(i).width;
+                    a[i] = Math.abs(supportW - screenHeight);
+                    b[i] = Math.abs(supportH - screenWidth);
+                    Log.d(TAG,"supportW:"+supportW+"supportH:"+supportH);
+                }
+                int minW=0,minA=a[0];
+                for( int i=0; i<a.length; i++){
+                    if(a[i]<=minA){
+                        minW=i;
+                        minA=a[i];
+                    }
+                }
+                int minH=0,minB=b[0];
+                for( int i=0; i<b.length; i++){
+                    if(b[i]<minB){
+                        minH=i;
+                        minB=b[i];
+                    }
+                }
+                Log.d(TAG,"result="+sizes.get(minW).width+"x"+sizes.get(minH).height);
+                List<Integer> list = parameters.getSupportedPreviewFrameRates();
+                parameters.setPreviewSize(sizes.get(minW).width,sizes.get(minH).height); // 设置预览图像大小
+                parameters.setPreviewFrameRate(list.get(list.size() - 1));
+//                连续自动对焦模式，主要用于录制视频过程中，Camera会不断地尝试聚焦，
+//                这是录制视频时对焦模式的最好选择，在设置了Camera的参数后就开始自动对焦，但是调用takePicture时不一定已经对焦完成。
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                myCamera.cancelAutoFocus();// 先要取消掉进程中所有的聚焦功能
+                myCamera.setParameters(parameters);
+                myCamera.autoFocus(new AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        Log.d("dfasa","自动聚焦："+success);
+                    }
+                });
+                myCamera.setDisplayOrientation(90);
+                myCamera.startPreview();
+            }
+        } catch (Exception e) {
+            if (myCamera != null)
+                myCamera.release();
+            myCamera = null;
+        }
     }
 
-    private Size getBestSupportedSize(List<Size> sizes) {
-        // 取能适用的最大的SIZE
-        Size largestSize = sizes.get(0);
-        int largestArea = sizes.get(0).height * sizes.get(0).width;
-        for (Size s : sizes) {
-            int area = s.width * s.height;
-            if (area > largestArea) {
-                largestArea = area;
-                largestSize = s;
-            }
-        }
-        return largestSize;
-    }
+
 
     /**
      * suraceView 销毁执行的操作
@@ -391,41 +351,5 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
         }
     }
 
-    /**
-     * 创建jpeg图片回调数据对象
-     */
-    private String filepath = "";
-    private PictureCallback jpegCallBack = new PictureCallback() {
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-
-            Bitmap oldBitmap = BitmapFactory.decodeByteArray(data, 0,
-                    data.length);
-            Matrix matrix = new Matrix();
-            matrix.setRotate(90);
-            Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
-                    oldBitmap.getWidth(), oldBitmap.getHeight(),
-                    matrix, true);
-            filepath = Environment.getExternalStorageDirectory()
-                    + File.separator
-                    + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
-                    + ".jpg";
-            File file = new File(filepath);
-            try {
-                BufferedOutputStream bos = new BufferedOutputStream(
-                        new FileOutputStream(file));
-                newBitmap.compress(Bitmap.CompressFormat.JPEG, 85, bos);
-                bos.flush();
-                bos.close();
-                camera.stopPreview();
-                camera.startPreview();
-                newBitmap.recycle();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
 }
