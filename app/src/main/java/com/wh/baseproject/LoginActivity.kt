@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.wh.baseproject.databinding.ActivityLoginBinding
+import com.zhengdao.video.AlbumActivity
 import com.zhengdao.video.CameraActivity
 import com.zhengdao.video.VideoActivity
 
@@ -17,6 +18,6 @@ class LoginActivity : AppCompatActivity() {
             DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
         binding.btn1.setOnClickListener { startActivity(Intent(this, VideoActivity::class.java)) };
         binding.btn2.setOnClickListener { startActivity(Intent(this, CameraActivity::class.java)) };
-
+        binding.btn3.setOnClickListener { startActivity(Intent(this, AlbumActivity::class.java)) };
     }
 }

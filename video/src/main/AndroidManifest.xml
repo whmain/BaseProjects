@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.zhengdao.video">
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.permission.CAMERA" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application>
-        <activity android:name=".CameraActivity"
-                android:theme="@style/ActivityBaseTheme"
-                android:screenOrientation="portrait"></activity>
-        <activity android:name=".VideoActivity" />
+        <activity android:name=".AlbumActivity"></activity>
+        <activity
+                android:name=".CameraActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/ActivityBaseTheme" />
+        <activity
+                android:name=".VideoActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+                android:screenOrientation="portrait"
+                android:theme="@style/ActivityBaseTheme" />
     </application>
 
 </manifest>

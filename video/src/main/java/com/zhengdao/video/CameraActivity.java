@@ -1,12 +1,14 @@
 package com.zhengdao.video;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -214,9 +216,18 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                 }
             }
             myCamera.startPreview(); // 开启预览
+            addAlbum();
         }
     }
 
+    private void addAlbum(){
+        if (videoFile == null){
+            return;
+        }
+        Uri uri =Uri.fromFile(videoFile);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri);
+        sendBroadcast(mediaScanIntent);
+    }
 
     /**
      * 传感器改变调用的方法
