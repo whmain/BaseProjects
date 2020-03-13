@@ -2,6 +2,7 @@ package com.zhengdao.video;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -49,10 +50,24 @@ public class AlbumActivity extends AppCompatActivity {
 
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "VideoFolder" + File.separator;
-                String destPath = path + File.separator+list.get(position).getName()+"_compress"+".mp4";
-                VideoCompress.compressVideoMedium(list.get(position).getUrl(), destPath, new VideoCompress.CompressListener() {
+            public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
+                final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "VideoFolder" + File.separator+"Compress";
+                final String destPath = path + File.separator+list.get(position).getName()+"_compress"+".mp4";
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            String filePath = SiliCompressor.with(AlbumActivity.this).compressVideo(list.get(position).getUrl(), path);
+//                            Log.d("fdafadfa",filePath);
+//                        } catch (URISyntaxException e) {
+//                            e.printStackTrace();
+//                            Log.d("fdafadfa",e.getMessage());
+//                        }
+//                    }
+//                }).start();
+
+
+                VideoCompress.compressVideoLow(list.get(position).getUrl(), destPath, new VideoCompress.CompressListener() {
                     @Override
                     public void onStart() {
                         tv_hint.setVisibility(View.VISIBLE);
@@ -72,6 +87,7 @@ public class AlbumActivity extends AppCompatActivity {
                     @Override
                     public void onProgress(float percent) {
                         tv_hint.setText("经度:"+percent);
+                        Log.d("fadfas",percent+"");
                     }
                 });
             }

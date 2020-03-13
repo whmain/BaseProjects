@@ -7,6 +7,7 @@ import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -140,6 +141,24 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
     }
 
     /**
+     * 通过系统的CamcorderProfile设置MediaRecorder的录制参数
+     * 首先查看系统是否包含对应质量的封装参数，然后再设置，根据具体需要的视频质量进行判断和设置
+     */
+    private void setProfile() {
+        CamcorderProfile profile = null;
+        if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P)) {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P);
+        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P)) {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+        }
+        if (profile != null) {
+            mRecorder.setProfile(profile);
+        }
+    }
+
+    /**
      * 控件点击事件的监听
      */
     @Override
@@ -163,19 +182,22 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                     mRecorder.setCamera(myCamera);
                     // 创建此视频文件
                     videoFile.createNewFile();
+
                     mRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface()); // 预览
                     mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA); // 视频源
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC); // 录音源为麦克风
-                    mRecorder
-                            .setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // 输出格式为mp4
-                    mRecorder.setVideoSize(800, 480); // 视频尺寸
-                    mRecorder.setVideoEncodingBitRate(2*1280*720); //设置视频编码帧率
-                    mRecorder.setVideoFrameRate(30); // 视频帧频率
-                    mRecorder
-                            .setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP); // 视频编码
-                    mRecorder
-                            .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); // 音频编码
+//
+//                    mRecorder
+//                            .setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // 输出格式为mp4
+//                    mRecorder.setVideoSize(800, 480); // 视频尺寸
+//                    mRecorder.setVideoEncodingBitRate(10*1920*1080); //设置视频编码帧率
+//                    mRecorder.setVideoFrameRate(30); // 视频帧频率
+//                    mRecorder
+//                            .setVideoEncoder(MediaRecorder.VideoEncoder.H264); // 视频编码
+//                    mRecorder
+//                            .setAudioEncoder(MediaRecorder.AudioEncoder.AAC); // 音频编码
                     mRecorder.setMaxDuration(0); // 设置最大录制时间 无限制
+                    setProfile();
                     mRecorder.setOutputFile(videoFile.getAbsolutePath()); // 设置录制文件源
                     mRecorder.prepare(); // 准备录像
                     mRecorder.start(); // 开始录像
@@ -242,20 +264,7 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
 
     }
 
-    /**
-     * 获取最大改变的值
-     */
-    private int getMaxValue(int px, int py, int pz) {
-        int max = 0;
-        if (px > py && px > pz) {
-            max = px;
-        } else if (py > px && py > pz) {
-            max = py;
-        } else if (pz > px && pz > py) {
-            max = pz;
-        }
-        return max;
-    }
+
 
 
 

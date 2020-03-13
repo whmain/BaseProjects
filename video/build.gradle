@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
 
@@ -24,6 +24,7 @@ android {
     dataBinding {
         enabled = true
     }
+
 
 }
 
@@ -59,4 +60,8 @@ dependencies {
 
     implementation 'com.android.support:recyclerview-v7:25.3.1'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+//    implementation ('com.iceteck.silicompressorr:silicompressor:2.2.3'){
+//        exclude module: 'aspectjjrt-1.7.3'
+//    }
 }

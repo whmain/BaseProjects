@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Camera2Activity">
+    <SurfaceView
+            android:id="@+id/surfaceview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+    <Button
+            android:id="@+id/btn_start"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="开始"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/btn_stop"/>
+
+    <Button
+            android:id="@+id/btn_stop"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="停止"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"/>
+</RelativeLayout>

@@ -22,24 +22,21 @@ public class VideoActivity extends AppCompatActivity {
                 .getAbsolutePath()
                 + File.separator
                 + "VideoFolder"
+                + File.separator
+                +"Compress"
                 + File.separator;
-//        url = url + "video20200306_155625.mp4";
-        url = url + "VID_20200304_165628.mp4";
+        url = url + "video20200313_164933_compress.mp4";
+//        url = url + "VID_20200312_145859_compress.mp4";
         binding.player.setUrl(url);
 //        binding.player.setUrl("http://video7.house365.com/stream/2020/03/02/15831335555e5cb3738dbcb.mp4");
         StandardVideoController controller = new StandardVideoController(this);
 
         controller.addDefaultControlComponent("fa",false);
         binding.player.setVideoController(controller);
+        binding.player.setRotation(180);
 //        binding.player.setPlayerFactory(IjkPlayerFactory.create());
 //        binding.player.setVolume();
-        binding.player.start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AlbumUtils.getList(VideoActivity.this);
-            }
-        }).start();
+        binding.player.startFullScreen();
     }
 
     @Override
