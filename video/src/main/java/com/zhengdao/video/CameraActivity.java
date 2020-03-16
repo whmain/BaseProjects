@@ -122,6 +122,12 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
         tingZhi_bt.setOnClickListener(this);
         // 添加回调
         holder.addCallback(this);
+        findViewById(R.id.change_bt).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeCamera();
+            }
+        });
     }
 
     /**
@@ -199,6 +205,11 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                     mRecorder.setMaxDuration(0); // 设置最大录制时间 无限制
                     setProfile();
                     mRecorder.setOutputFile(videoFile.getAbsolutePath()); // 设置录制文件源
+                    int degrees = 90;
+                    if (isFront()){
+                        degrees += 180;
+                    }
+                    mRecorder.setOrientationHint(degrees); //处理拍摄时正常，播放时视屏颠倒问题
                     mRecorder.prepare(); // 准备录像
                     mRecorder.start(); // 开始录像
                     time_tv.setVisibility(View.VISIBLE); // 设置文本框可见
@@ -265,7 +276,57 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
     }
 
 
+    /*** 标识当前是前摄像头还是后摄像头  back:0  front:1*/
+    private int backOrFtont = 0;
 
+    private boolean isFront(){
+        if (backOrFtont == 1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    /**
+     * 切换摄像头
+     */
+    public void changeCamera() {
+        int cameraCount = 0;
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        cameraCount = Camera.getNumberOfCameras();
+        for (int i = 0; i < cameraCount; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT && backOrFtont == 0) {
+                myCamera.stopPreview();
+                myCamera.release();
+                myCamera = null;
+                myCamera = Camera.open(i);
+                try {
+                    myCamera.setPreviewDisplay(surfaceView.getHolder());
+                    myCamera.setDisplayOrientation(90);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                backOrFtont = 1;
+                myCamera.startPreview();
+                break;
+            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK && backOrFtont == 1) {
+                myCamera.stopPreview();
+                myCamera.release();
+                myCamera = null;
+                myCamera = Camera.open(i);
+                try {
+                    myCamera.setPreviewDisplay(surfaceView.getHolder());
+                    myCamera.setDisplayOrientation(90);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myCamera.startPreview();
+                backOrFtont = 0;
+                break;
+            }
+        }
+
+    }
 
 
     /**

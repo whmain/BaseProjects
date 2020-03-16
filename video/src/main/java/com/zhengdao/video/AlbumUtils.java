@@ -17,11 +17,36 @@ public class AlbumUtils {
     public static List<VideoBean> getList(Context context) {
         List<VideoBean> list = null;
         if (context != null) {
-            String[] thumbColumns = {MediaStore.Video.Thumbnails.DATA,
-                    MediaStore.Video.Thumbnails.VIDEO_ID};
-            Cursor cursor = context.getContentResolver().query(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null,
-                    null, null);
+//            String[] thumbColumns = {MediaStore.Video.Thumbnails.DATA,
+//                    MediaStore.Video.Thumbnails.VIDEO_ID};
+//            Cursor cursor = context.getContentResolver().query(
+//                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null,
+//                    null, null);
+
+
+            String[] projection = {
+                    MediaStore.Video.Media.DATA,
+                    MediaStore.Video.Media.DISPLAY_NAME,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.SIZE
+            };
+            //全部图片
+            String where = MediaStore.Images.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Video.Media.MIME_TYPE + "=?";
+            String[] whereArgs = {"video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
+                    "video/mkv", "video/mov", "video/mpg"};
+
+            Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    null, where, whereArgs, MediaStore.Video.Media.DATE_ADDED + " DESC ");
+
+
             if (cursor != null) {
                 list = new ArrayList<VideoBean>();
                 while (cursor.moveToNext()) {
