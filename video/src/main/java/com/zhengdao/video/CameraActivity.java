@@ -128,6 +128,41 @@ public class CameraActivity extends AppCompatActivity implements OnClickListener
                 changeCamera();
             }
         });
+        findViewById(R.id.flash_bt).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                turnFlash(!flashIsOn());
+            }
+        });
+    }
+
+    /**
+     * 闪光灯状态  0：关闭  1：打开
+     */
+    private int flashState = 0;
+
+    /**
+     * 闪光灯是否打开
+     * @return
+     */
+    private boolean flashIsOn(){
+       return flashState == 1;
+    }
+    public void turnFlash(boolean on){
+        if(myCamera != null){
+            try {
+                Camera.Parameters parameters = myCamera.getParameters();
+                if (on){
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }else {
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                }
+                myCamera.setParameters(parameters);
+                flashState = on?1:0;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
